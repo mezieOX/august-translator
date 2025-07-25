@@ -144,124 +144,138 @@ function TranslatorCard() {
       } else {
         setError(data.error || "Translation failed");
       }
-    } catch (err) {
+    } catch {
       setError("Network error. Please try again.");
     }
     setLoading(false);
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white rounded-lg shadow-md border border-gray-200 p-4 sm:p-6 md:p-7 mt-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2 sm:gap-0">
-        <h3 className="text-xl sm:text-2xl font-semibold text-center sm:text-left">
-          Translator
-        </h3>
-      </div>
-      <div className="flex flex-col md:flex-row items-stretch gap-2 md:gap-4 mb-4 pb-2">
-        <div className="flex-1">
-          <label className="block text-sm font-medium mb-1 text-black">
-            From
-          </label>
-          <div className="relative">
-            <select
-              className="w-full border rounded px-3 py-2 min-h-[47px] md:min-h-[30px] appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10 border-gray-300"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
+    <div className="flex justify-center items-center min-h-[70vh]">
+      <div className="w-full max-w-4xl bg-white/60 backdrop-blur-md rounded-3xl shadow-xl border border-blue-200/40 p-8 mt-8 relative">
+        {/* Settings Button */}
+
+        {/* Card Title */}
+        <h2 className="text-2xl font-bold text-blue-700 mb-6">
+          Translation Studio
+        </h2>
+        {/* Language Selectors */}
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
+          <div className="flex-1 w-full">
+            <label className="block text-xs font-bold text-gray-500 mb-2 tracking-widest">
+              FROM LANGUAGE
+            </label>
+            <div className="relative">
+              <select
+                className="form-select w-full rounded-full border border-blue-200 bg-white/80 px-5 py-3 min-h-[48px] text-base font-semibold text-gray-700 shadow focus:ring-2 focus:ring-blue-400 pr-10 appearance-none"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+              >
+                {LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </option>
+                ))}
+              </select>
+              <FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-blue-400" />
+            </div>
+          </div>
+          <div className="flex items-center justify-center my-2 md:my-0">
+            <button
+              className="p-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all border-4 border-white"
+              onClick={swapLanguages}
+              title="Swap languages"
             >
-              {LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name}
-                </option>
-              ))}
-            </select>
-            <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
+              <FaExchangeAlt className="text-xl" />
+            </button>
+          </div>
+          <div className="flex-1 w-full">
+            <label className="block text-xs font-bold text-gray-500 mb-2 tracking-widest">
+              TO LANGUAGE
+            </label>
+            <div className="relative">
+              <select
+                className="form-select w-full rounded-full border border-purple-200 bg-white/80 px-5 py-3 min-h-[48px] text-base font-semibold text-gray-700 shadow focus:ring-2 focus:ring-purple-400 pr-10 appearance-none"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+              >
+                {LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </option>
+                ))}
+              </select>
+              <FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-purple-400" />
+            </div>
           </div>
         </div>
-        <div className="flex justify-center items-center">
+        {/* Source/Translation Areas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="h-3 w-3 rounded-full bg-blue-500 inline-block"></span>
+              <span className="font-bold text-gray-700">Source Text</span>
+            </div>
+            <textarea
+              className="form-textarea w-full rounded-2xl border border-blue-200 bg-white/80 px-5 py-4 min-h-[160px] text-base font-medium text-gray-700 shadow focus:ring-2 focus:ring-blue-400 resize-y"
+              placeholder="Enter text to translate..."
+              value={source}
+              onChange={(e) => setSource(e.target.value)}
+            />
+            <div className="text-xs text-gray-400 mt-1 text-right">
+              {source.length} characters
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="h-3 w-3 rounded-full bg-purple-500 inline-block"></span>
+              <span className="font-bold text-gray-700">Translation</span>
+            </div>
+            <textarea
+              className="form-textarea w-full rounded-2xl border border-purple-200 bg-white/80 px-5 py-4 min-h-[160px] text-base font-medium text-gray-700 shadow focus:ring-2 focus:ring-purple-400 resize-y"
+              placeholder="Translation will appear here..."
+              value={translation}
+              readOnly
+            />
+          </div>
+        </div>
+        {error && (
+          <div className="text-red-500 text-sm text-center mb-2">{error}</div>
+        )}
+        <div className="flex justify-center">
           <button
-            className="p-2 cursor-pointer border p-2.5 hover:bg-gray-100 mt-2 rounded border-gray-300"
-            onClick={swapLanguages}
-            title="Swap languages"
+            className="w-full sm:w-auto flex justify-center items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 transition-all"
+            onClick={handleTranslate}
+            disabled={!source || loading}
           >
-            <FaExchangeAlt className="" />
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8z"
+                  />
+                </svg>
+                Translating...
+              </span>
+            ) : (
+              "Translate Text"
+            )}
           </button>
         </div>
-        <div className="flex-1">
-          <label className="block text-sm font-medium mb-1 text-black">
-            To
-          </label>
-          <div className="relative">
-            <select
-              className="w-full border rounded px-3 py-2 min-h-[47px] md:min-h-[30px] appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10 border-gray-300"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-            >
-              {LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name}
-                </option>
-              ))}
-            </select>
-            <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 border-t border-t-gray-300">
-        <div className="pt-7">
-          <label className="block text-sm font-medium mb-1">Source Text</label>
-          <textarea
-            className="w-full border rounded px-3 py-2 min-h-[200px] focus:outline-none focus:ring-2 focus:ring-blue-400 resize-y border-gray-300"
-            placeholder="Enter text to translate..."
-            value={source}
-            onChange={(e) => setSource(e.target.value)}
-          />
-        </div>
-        <div className="md:pt-7">
-          <label className="block text-sm font-medium mb-1">Translation</label>
-          <textarea
-            className="w-full border rounded px-3 py-2 min-h-[200px] bg-gray-50 focus:outline-none resize-y border-gray-300"
-            placeholder="Translation will appear here..."
-            value={translation}
-            readOnly
-          />
-        </div>
-      </div>
-      {error && (
-        <div className="text-red-500 text-sm text-center mb-2">{error}</div>
-      )}
-      <div className="flex justify-center">
-        <button
-          className="w-full sm:w-auto flex justify-center items-center bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-2 rounded font-semibold hover:from-blue-700 hover:to-blue-900 disabled:opacity-50 transition-all shadow-md lg:shadow-none"
-          onClick={handleTranslate}
-          disabled={!source || loading}
-        >
-          {loading ? (
-            <span className="flex items-center gap-2">
-              <svg
-                className="animate-spin h-5 w-5 text-white"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8z"
-                />
-              </svg>
-              Translating...
-            </span>
-          ) : (
-            "Translate"
-          )}
-        </button>
       </div>
     </div>
   );
@@ -269,17 +283,26 @@ function TranslatorCard() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen py-12 lg:py-20">
-      <div className="flex items-center justify-center gap-2">
-        <PiTranslateBold className="text-3xl text-black" />
-        <h1 className="text-3xl font-bold text-center">Unit Translator</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-100">
+      {/* Header Bar */}
+      <header className="w-full bg-gradient-to-r from-blue-600 to-purple-500 py-4 px-6 flex items-center gap-3 shadow-md">
+        <PiTranslateBold className="text-3xl text-white" />
+        <span className="text-2xl font-extrabold text-white tracking-wide">
+          August Translator
+        </span>
+      </header>
+      {/* Subtitle */}
+      <div className="w-full flex justify-center mt-6">
+        <p className="text-lg text-gray-600 font-medium bg-white/60 px-6 py-2 rounded-full shadow-sm backdrop-blur-md">
+          Experience seamless translation between languages with a beautiful,
+          modern interface
+        </p>
       </div>
-      <p className="text-center pb-3 pt-4 text-gray-400">
-        Translate text between multiple languages instantly
-      </p>
+      {/* Main Card */}
       <TranslatorCard />
-      <footer className="text-center  text-gray-400 mt-8">
-        Powered by Unit Translate API
+      {/* Footer */}
+      <footer className="w-full bg-gradient-to-r from-blue-600 to-purple-500 text-white text-center py-4 mt-12 shadow-inner">
+        Powered by August Translate API
       </footer>
     </div>
   );

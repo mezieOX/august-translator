@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Unit Translator",
-  description: "Unit Translator",
+  title: "August Translator",
+  description: "August Translator",
 };
 
 export default function RootLayout({
